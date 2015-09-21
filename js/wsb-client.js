@@ -377,7 +377,7 @@ ConfigurationClient.prototype.set = function (key, data, callback) {
 			return;
 		}
 	}
-	$.ajax(this.url + '/' + encdoeURICompoenent(key), {
+	$.ajax(this.url + '/' + encodeURIComponent(key), {
 		cache: false,
 		dataType: 'json',
 		method: 'POST',

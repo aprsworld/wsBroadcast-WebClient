@@ -55,17 +55,19 @@ function data_start () {
 	config_object.set('DELME', config_data, function (success, data) {
 			if (!success) {
 				alert('FAILED TO SET CONFIGURATION DATA');
-			} else if (data.response != 'STORED') {
+			} else if (data.result != 'STORED') {
 				alert('BOOM');
-			} else if (data.response == 'STORED') {
+			} else if (data.result == 'STORED') {
 				alert('Configuration Data Set');
 			}
 	});
 	config_object.get('DELME', function (success, data) {
 			if (!success) {
 				alert('FAILED TO GET CONFIGURATION DATA');
-			} else if (JSON.stringify(data.response) != JSON.stringify(config_data)) {
+			} else if (JSON.stringify(data.result) != JSON.stringify(config_data)) {
 				alert('CONFIGURATION DATA MISMATCH');
+			} else {
+				alert('Configuration sent and received matches.');
 			}
 	});
 }
