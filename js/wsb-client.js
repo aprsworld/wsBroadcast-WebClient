@@ -329,3 +329,64 @@ BroadcastClient.prototype.Connect = function() {
 	this.logger.error('wsb-client: Connection method ' + this.method + ' does not exist!');
 	return false;
 };
+
+
+/*
+ * Configuration Object
+ *
+ * config
+ *	url is the base url to get and send configuration data to.
+ *
+ * get(key, callback)
+ *	key: configuration key to retrieve from the server.
+ *	callback: function (data) where data is an object in the form of
+ *		{ error: [string] } for errors or { result: [object] }
+ *		for successful queries.
+ *
+ * set(key, data, callback)
+ *	key: configuration key to send to the server.
+ *	data: data to set in key.  If it's not a string will be converted to
+ *		JSON before transmission and storage.
+ *	callback: function (success, data) where success is true if set and
+ *		false if there was an error.  data contains { error: [string] }
+ *		for errors and { result: 'STORED' } for success.
+ *	
+ */
+function ConfigurationClient(config) {
+	this.url = 'http://' + window.location.hostname + ":" + window.location.port + '/.config';
+	$.extend(this, config);
+}
+ConfigurationClient.prototype.get = function (key, callback) {
+	$.ajax(this.url + '/' + encodeURIComponent(key), {
+		cache: false,
+		dataType: 'json'
+	}).done(function (data, status, XHR) {
+		// XXX: Can get here even if not successful
+		callback(true, data);
+	}).fail(function (XHR, status, error) {
+		callback(false, { error: 'AJAX Error' });
+	});
+};
+ConfigurationClient.prototype.set = function (key, data, callback) {
+	var data_encoded = data;
+	if (typeof data !== 'string') {
+		try {
+			data_encoded = JSON.stringify(data);
+		} catch (e) {
+			callback(false, { error: 'JSON Conversion Error' });
+			return;
+		}
+	}
+	$.ajax(this.url + '/' + encdoeURICompoenent(key), {
+		cache: false,
+		dataType: 'json',
+		method: 'POST',
+		contentType: 'text/plain',	// XXX: application/json
+		processData: false,
+		data: data_encoded
+	}).done(function (data, status, XHR) {
+		callback(true, data);
+	}).fail(function (XHR, status, error) {
+		callback(false, { error: 'AJAX Error' });
+	});
+};
