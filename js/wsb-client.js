@@ -44,8 +44,8 @@
 function BroadcastClient(config) {
 
 	// Set Defaults
-	this.url_ws = 'ws://' + window.location.hostname + ':' + 8889 + '/.data';	// XXX: port
-	this.url_ajax = 'http://' + window.location.hostname + ":" + window.location.port + '/.data';
+	this.url_ws = 'ws://' + window.location.hostname + ':' + window.location.port + '/.data/';
+	this.url_ajax = 'http://' + window.location.hostname + ":" + window.location.port + '/.data/';
 	this.delay_inc = 10;		// 10 seconds
 	this.delay_max = 60 * 5;	// 5 minute default
 	this.poll_freq = 20;		// 20 second default
