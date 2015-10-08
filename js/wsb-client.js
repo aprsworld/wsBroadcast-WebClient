@@ -141,7 +141,7 @@ BroadcastClient.prototype.onMessage = function(text) {
 BroadcastClient.prototype.onData = function(data) {
 	this.logger.debug('wsb-client: Received new data.');
 	// XXX:
-	if (data.wsb_version) {
+	if (data.wsb_update) {
 		data = data.data;
 	}
 	try {
@@ -426,7 +426,7 @@ BroadcastClient.prototype.ValueSet = function(callback, uri, value, expire) {
 		contentType:	'application/json',
 		method:		'POST',
 		data:		JSON.stringify({
-					wsb_version:	0,
+					wsb_update:	0,
 					uri:		uri,
 					data:		value,
 					expire:		expire
