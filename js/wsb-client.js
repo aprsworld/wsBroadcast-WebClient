@@ -408,8 +408,7 @@ BroadcastClient.prototype.ValueGet = function(callback, uri) {
 		cache:		false,
 		dataType:	'json'
 	}).done(function (data, status, XHR) {
-		callback(this.Response(XHR, status,
-			data, status == 200 ? undefined : true));
+		callback(this.Response(XHR, status, data, undefined));
 	}).fail(function (XHR, status, error) {
 		callback(this.Response(XHR, status, undefined, error));
 	});
@@ -433,8 +432,7 @@ BroadcastClient.prototype.ValueSet = function(callback, uri, value, expire) {
 					expire:		expire
 				})
 	}).done(function (data, status, XHR) {
-		callback(this.Response(XHR, status,
-			data, (status == 200 || status == 201) ? undefined : true));
+		callback(this.Response(XHR, status, data, undefined));
 	}).fail(function (XHR, status, error) {
 		callback(this.Response(XHR, status, undefined, error));
 	});

@@ -8,20 +8,48 @@
 <script>WEB_SOCKET_SWF_LOCATION = "res/web-socket-js/WebSocketMain.swf";</script>
 <script src="js/wsb-client.js"></script> <!-- WebSockets Broadcast Client -->
 <script>
-function table_generate(data) {
+function convert(str) {
+	try {
+		return JSON.parse(str.trim());
+	} catch (e) {
+		// don't care... fall through
+	}
+	return str;
+}
+function table_generate(data, uri) {
 	var $dtable = $('<table border=1></table>');
+	if (typeof data === 'object' && uri) {
+		uri = uri + '/';
+	} else {
+		uri = '';
+	}
 	for (var p in data) {
+		var turi = uri + p;
 		var $drow = $('<tr></tr>');
 		var $th = $('<th></th>');
 		$th.text(p);
 		$drow.append($th);
 		// Nest Objects
 		if (typeof data[p] === 'object') {
-			$drow.append(table_generate(data[p]));
+			$drow.append(table_generate(data[p], turi));
 		} else {
 			var $td = $('<td></td>');
-			$td.text(data[p]);
+			var $form = $('<form>');
+			var $input = $('<input type="text">');
+			$input.val(data[p]);
+			var $submit = $('<input type="button">Update</button>');
+			$form.append($input, $submit);
+			$td.append($form);
 			$drow.append($td);
+			$submit.click(function(event) {
+				data_object.ValueSet(function(resp) {
+					if (resp.error) {
+						alert('Failed to Update!');
+					} else {
+						alert('Value Updated!');
+					}
+				}, turi, convert($input.val()));
+			});
 		}
 		$dtable.append($drow);
 	}
