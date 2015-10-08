@@ -323,9 +323,8 @@ BroadcastClient.prototype.WSConnect = function() {
  */
 BroadcastClient.prototype.Connect = function() {
 
-	if (!this.connect) {
-		return false;
-	}
+	// We are connecting
+	this.connect = true;
 
 	// WebSockets methods
 	if (!this.method || this.method.search('WebSocket$') != -1) {
