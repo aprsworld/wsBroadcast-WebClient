@@ -45,8 +45,7 @@
 function BroadcastClient(config) {
 
 	// Set Defaults
-	// XXX: protocol (HTTP or HTTPS)
-	this.url = 'http://' + window.location.hostname + ':' + window.location.port + '/.data/';
+	this.url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/.data/';
 	this.delay_inc = 10;		// 10 seconds
 	this.delay_max = 60 * 5;	// 5 minute default
 	this.poll_freq = 20;		// 20 second default
@@ -85,7 +84,7 @@ function BroadcastClient(config) {
 	}
 
 	// Handle subscriptions and urls
-	// XXX: Array
+	// TODO: Array of subscriptions
 	this.uri = '';
 	if (this.subscriptions) {
 		this.uri = this.subscriptions;
@@ -201,7 +200,7 @@ BroadcastClient.prototype.AJAXConnect = function () {
 		cache:		false,
 		dataType:	'json',
 		ifModified:	true,
-		headers:	{}	// XXX: Last Modification Time
+		headers:	{}	// TODO: Last Modification Time
 	}).done(function (data, status, XHR) {
 		// XXX: status, XHR?
 		this.onData(data);
