@@ -88,7 +88,7 @@ function BroadcastClient(config) {
 	// XXX: Array
 	this.uri = '';
 	if (this.subscriptions) {
-		this.uri = subscriptions;
+		this.uri = this.subscriptions;
 	}
 	if (!this.url_ws) {
 		if (this.url.search('/^http:\\/\\//i')) {
