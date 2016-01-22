@@ -103,6 +103,15 @@ function BroadcastClient(config) {
 	this.delay = 0;	// delay after connection failure
 	this.ws = null; // current WebSocket
 	this.ws_error = false;	// false if no WebSocket error, otherwise the error
+
+	// Handle IE ('application/json' -> 'text/plain') Hack
+	var agent = window.navigator.userAgent;
+	if (agent.search('MSIE') >= 0 || agent.search('Trident') >= 0) {
+		this.ie_hack = '.txt';
+	} else {
+		this.ie_hack = '';
+	}
+
 	// Make a Connection
 	if (!this.Connect()) {
 		this.delay = -1;
@@ -195,7 +204,7 @@ BroadcastClient.prototype.AJAXConnect = function () {
 
 	this.logger.debug('wsb-client: Making JQuery AJAX Request...');
 
-	$.ajax(this.url + this.uri, {
+	$.ajax(this.url + this.uri + this.ie_hack, {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
@@ -402,7 +411,7 @@ BroadcastClient.prototype.Response = function(XHR, status, data, error) {
  * Get Value
  */
 BroadcastClient.prototype.ValueGet = function(callback, uri) {
-	$.ajax(this.url + uri, {
+	$.ajax(this.url + uri + this.ie_hack, {
 		context:	this,
 		cache:		false,
 		dataType:	'json'
@@ -418,7 +427,7 @@ BroadcastClient.prototype.ValueGet = function(callback, uri) {
  * Set Value
  */
 BroadcastClient.prototype.ValueSet = function(callback, uri, value, expire) {
-	$.ajax(this.url + uri, {
+	$.ajax(this.url + uri + this.ie_hack, {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
