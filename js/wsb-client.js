@@ -7,7 +7,6 @@
  * config object
  *	url is the base HTTP or HTTPS url used for both AJAX and WS connections.
  *	url_ws is an optional different websocket server url.
- *	subscriptions is the uri to receive updates for (TODO: array).
  *	delay_inc is the amount of seconds added after each failed connection
  *	delay_max is the longest delay waited after each failed connection
  *	poll_freq is the frequency at which AJAX polls will happen 
@@ -19,10 +18,6 @@
  *			description of the error.
  *			where reconnect_delay is the number of seconds until
  *			another connection attempt will happen if needed.
- *	callback_update is a callback called whenever there is new data
- *		update(data)
- *			where data is a standard JavaScript object created
- *			from JSON data.
  *
  *	logger	is a 'logger' object.  If one isn't passed in the standard
  *		console object from the browser is used.
@@ -41,13 +36,28 @@
  *		'FlashWebSocket' forces use of the Flash emulation.
  *		'AJAX' forces the use of AJAX polling.
  *		'Fail' forces the use of none (failure).
+ *
+ * methods
+ *	enumerate(uri)
+ *		Will enumerate all properties of the specified uri in the tree.
+ *
+ *	sub subscribe(uri, callback)
+ *		Will subscribe to and call callback with any updates from that
+ *		uri in the tree.
+ *		callback(data) where data is a JSON object containing any
+ *		changes to the tree at that uri.
+ *		sub is an object with a remove() method that will stop the
+ *		subscription.
+ *
+ *	data_rx_counter()
+ *		Will return the number of bytes recieved from the server.
  */
 function BroadcastClient(config) {
 
 	// Set Defaults
 	this.url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/.data/';
-	this.delay_inc = 10;		// 10 seconds
-	this.delay_max = 60 * 5;	// 5 minute default
+	this.delay_inc = 1;		// 1 seconds default
+	this.delay_max = 10;		// 10 seconds default
 	this.poll_freq = 20;		// 20 second default
 
 	// error([errors], reconnect_delay)
