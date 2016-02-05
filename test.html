@@ -37,6 +37,8 @@ function table_generate(data, uri) {
 			var $form = $('<form>');
 			var $input = $('<input type="text">');
 			$input.val(data[p]);
+			var $hidden = $('<input type="hidden">');
+			$hidden.val(turi);
 			var $submit = $('<input type="button">Update</button>');
 			$form.append($input, $submit);
 			$td.append($form);
@@ -48,7 +50,7 @@ function table_generate(data, uri) {
 					} else {
 						alert('Value Updated!');
 					}
-				}, turi, convert($input.val()));
+				}, $hidden.val(), convert($input.val()));
 			});
 		}
 		$dtable.append($drow);
@@ -68,6 +70,7 @@ function data_error (errors, reconnect_delay) {
 
 function data_update (data) {
 	$('#wsdata').html(table_generate(data));
+	$('#wscounter').text(this.rx_data_counter() + ' bytes');
 }
 
 var data_object = null;
@@ -87,6 +90,7 @@ function data_start () {
 </div>
 
 <div id="content">
+<div id="wscounter">0 bytes</div>
 <div id="wsdata">
 <strong>THIS SITE REQUIRES JAVASCRIPT!</strong>
 </div>
