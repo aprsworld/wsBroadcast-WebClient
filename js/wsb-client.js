@@ -41,6 +41,8 @@
  *	enumerate(uri)
  *		Will enumerate all properties of the specified uri in the tree.
  *
+ *
+ *      XXX: THIS IS BOGUS: TODO:
  *	sub subscribe(uri, callback)
  *		Will subscribe to and call callback with any updates from that
  *		uri in the tree.
@@ -93,12 +95,6 @@ function BroadcastClient(config) {
 		}
 	}
 
-	// Handle subscriptions and urls
-	// TODO: Array of subscriptions
-	this.uri = '';
-	if (this.subscriptions) {
-		this.uri = this.subscriptions;
-	}
 	if (!this.url_ws) {
 		if (this.url.search('/^http:\\/\\//i')) {
 			this.url_ws = this.url.replace('http', 'ws');
@@ -109,6 +105,7 @@ function BroadcastClient(config) {
 	}
 
 	// Set initial properties
+	this.rx_data = 0;
 	this.connect = false;
 	this.delay = 0;	// delay after connection failure
 	this.ws = null; // current WebSocket
@@ -132,6 +129,13 @@ function BroadcastClient(config) {
 	return this;
 }
 
+
+/*
+ * Get Data Counter
+ */
+BroadcastClient.prototype.rx_data_counter = function() {
+	return this.rx_data;
+};
 
 /*
  * Message Handler
@@ -158,10 +162,6 @@ BroadcastClient.prototype.onMessage = function(text) {
  */
 BroadcastClient.prototype.onData = function(data) {
 	this.logger.debug('wsb-client: Received new data.');
-	// XXX:
-	if (data.wsb_update) {
-		data = data.data;
-	}
 	try {
 		this.callback_update(data);
 	} catch (e) {
@@ -205,7 +205,7 @@ BroadcastClient.prototype.ConnectThrottle = function (reset) {
 /*
  * AJAX Polling
  */
-BroadcastClient.prototype.AJAXConnect = function () {
+BroadcastClient.prototype.AJAXConnect = function (uri) {
 
 	// Disconnect
 	if (!this.connect) {
@@ -214,7 +214,10 @@ BroadcastClient.prototype.AJAXConnect = function () {
 
 	this.logger.debug('wsb-client: Making JQuery AJAX Request...');
 
-	$.ajax(this.url + this.uri + this.ie_hack, {
+	if (!uri) {
+		uri = '';
+	}
+	$.ajax(this.url + uri + this.ie_hack, {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
@@ -261,7 +264,7 @@ BroadcastClient.prototype.WSConnect = function() {
 	// Standard WebSockets Implementation
 	if (!this.method || this.method == 'WebSocket') {
 		try {
-			this.ws = new WebSocket(this.url_ws + this.uri);
+			this.ws = new WebSocket(this.url_ws);
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: WebSockets unavailable!');
@@ -273,7 +276,7 @@ BroadcastClient.prototype.WSConnect = function() {
 	// Mozilla WebSockets Implementation
 	if (!this.ws && (!this.method || this.method == 'MozWebSocket')) {
 		try {
-			this.ws = new MozWebSocket(this.url_ws + this.uri);
+			this.ws = new MozWebSocket(this.url_ws);
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: MozWebSockets unavailable!');
@@ -286,7 +289,7 @@ BroadcastClient.prototype.WSConnect = function() {
 	if (!this.ws && (!this.method || this.method == 'FlashWebSocket')) {
 		try {
 			this.logger.info('wsb-client: FlashWebSocket is broken!');
-			//this.ws = new FlashWebSocket(this.url_ws + this.uri);
+			//this.ws = new FlashWebSocket(this.url_ws);
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: FlashWebSocket unavailable!');
@@ -322,6 +325,7 @@ BroadcastClient.prototype.WSConnect = function() {
 
 	// WebSocket Message
 	this.ws.onmessage = function(m) {
+		self.rx_data += m.data.length;
 		self.onMessage(m.data);
 	};
 
@@ -443,12 +447,7 @@ BroadcastClient.prototype.ValueSet = function(callback, uri, value, expire) {
 		dataType:	'json',
 		contentType:	'application/json',
 		method:		'POST',
-		data:		JSON.stringify({
-					wsb_update:	0,
-					uri:		uri,
-					data:		value,
-					expire:		expire
-				})
+		data:		JSON.stringify(value)
 	}).done(function (data, status, XHR) {
 		callback(this.Response(XHR, status, data, undefined));
 	}).fail(function (XHR, status, error) {
