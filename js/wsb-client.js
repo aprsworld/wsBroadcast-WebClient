@@ -440,8 +440,13 @@ BroadcastClient.prototype.ValueGet = function(callback, uri) {
 /*
  * Set Value
  */
-BroadcastClient.prototype.ValueSet = function(callback, uri, value, expire) {
-	$.ajax(this.url + uri + this.ie_hack, {
+BroadcastClient.prototype.ValueSet = function(callback, uri, value, persist) {
+	if (persist) {
+		persist = '?persist=true';
+	} else {
+		persist = '';
+	}
+	$.ajax(this.url + uri + this.ie_hack + persist, {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
