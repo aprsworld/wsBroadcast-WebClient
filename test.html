@@ -35,9 +35,20 @@ function table_generate(data, uri) {
 		} else {
 			var $td = $('<td></td>');
 			var $form = $('<form>');
+			var $hidden = $('<input type="hidden">');
+			$hidden.val(turi);
 			var $input = $('<input type="text">');
 			$input.val(JSON.stringify(data[p]));
-			$form.append($input);
+			var $submit = $('<input type="button" value="Update">');
+			var $perm = $('<input type="checkbox">');
+			$form.append($hidden, $input, $submit, $perm);
+			$submit.on("click", {uri: turi, val: $input, perm: $perm}, function(e) {
+				data_object.ValueSet(function(resp) {
+					if (resp.error) {
+						alert('Failed to Update!');
+					}
+				}, e.data.uri, JSON.parse(e.data.val.val()), e.data.perm.prop("checked") ? true : false);
+			});
 			$td.append($form);
 			$drow.append($td);
 		}
