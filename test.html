@@ -36,22 +36,10 @@ function table_generate(data, uri) {
 			var $td = $('<td></td>');
 			var $form = $('<form>');
 			var $input = $('<input type="text">');
-			$input.val(data[p]);
-			var $hidden = $('<input type="hidden">');
-			$hidden.val(turi);
-			var $submit = $('<input type="button">Update</button>');
-			$form.append($input, $submit);
+			$input.val(JSON.stringify(data[p]));
+			$form.append($input);
 			$td.append($form);
 			$drow.append($td);
-			$submit.click(function(event) {
-				data_object.ValueSet(function(resp) {
-					if (resp.error) {
-						alert('Failed to Update!');
-					} else {
-						alert('Value Updated!');
-					}
-				}, $hidden.val(), convert($input.val()));
-			});
 		}
 		$dtable.append($drow);
 	}
