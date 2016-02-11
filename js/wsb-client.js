@@ -57,7 +57,7 @@
 function BroadcastClient(config) {
 
 	// Set Defaults
-	this.url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/.data/';
+	this.url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/data/now';
 	this.delay_inc = 1;		// 1 seconds default
 	this.delay_max = 10;		// 10 seconds default
 	this.poll_freq = 20;		// 20 second default
@@ -98,6 +98,7 @@ function BroadcastClient(config) {
 	if (!this.url_ws) {
 		if (this.url.search('/^http:\\/\\//i')) {
 			this.url_ws = this.url.replace('http', 'ws');
+			this.url_ws = this.url_ws + '.json';
 		} else {
 			this.logger.error('wsb-client: Invalid URL!');
 			return false;
@@ -114,9 +115,9 @@ function BroadcastClient(config) {
 	// Handle IE ('application/json' -> 'text/plain') Hack
 	var agent = window.navigator.userAgent;
 	if (agent.search('MSIE') >= 0 || agent.search('Trident') >= 0) {
-		this.ie_hack = '.txt';
+		this.ie_hack = '.dat';
 	} else {
-		this.ie_hack = '';
+		this.ie_hack = '.json';
 	}
 
 	// Make a Connection
@@ -217,7 +218,7 @@ BroadcastClient.prototype.AJAXConnect = function (uri) {
 	if (!uri) {
 		uri = '';
 	}
-	$.ajax(this.url + uri + this.ie_hack, {
+	$.ajax(this.url + this.ie_hack + uri, {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
@@ -425,7 +426,7 @@ BroadcastClient.prototype.Response = function(XHR, status, data, error) {
  * Get Value
  */
 BroadcastClient.prototype.ValueGet = function(callback, uri) {
-	$.ajax(this.url + uri + this.ie_hack, {
+	$.ajax(this.url + this.ie_hack + '/' + uri, {
 		context:	this,
 		cache:		false,
 		dataType:	'json'
@@ -446,7 +447,7 @@ BroadcastClient.prototype.ValueSet = function(callback, uri, value, persist) {
 	} else {
 		persist = '';
 	}
-	$.ajax(this.url + uri + this.ie_hack + persist, {
+	$.ajax(this.url + this.ie_hack + '/' + uri + persist, {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
