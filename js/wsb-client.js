@@ -426,7 +426,7 @@ BroadcastClient.prototype.Response = function(XHR, status, data, error) {
  * Get Value
  */
 BroadcastClient.prototype.ValueGet = function(callback, uri) {
-	$.ajax(this.url + this.ie_hack + uri, {
+	$.ajax(this.url + this.ie_hack + '/' + uri, {
 		context:	this,
 		cache:		false,
 		dataType:	'json'
@@ -447,7 +447,7 @@ BroadcastClient.prototype.ValueSet = function(callback, uri, value, persist) {
 	} else {
 		persist = '';
 	}
-	$.ajax(this.url + this.ie_hack + uri + persist, {
+	$.ajax(this.url + this.ie_hack + '/' + uri + persist, {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
