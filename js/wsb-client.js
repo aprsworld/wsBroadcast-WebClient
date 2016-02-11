@@ -450,7 +450,7 @@ BroadcastClient.prototype.ValueSet = function(callback, uri, value, persist) {
 		context:	this,
 		cache:		false,
 		dataType:	'json',
-		contentType:	'application/json',
+		//contentType:	'application/json',
 		method:		'POST',
 		data:		JSON.stringify(value)
 	}).done(function (data, status, XHR) {
