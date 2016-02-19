@@ -55,9 +55,11 @@
  *		Will return the number of bytes recieved from the server.
  */
 function BroadcastClient(config) {
-
 	// Set Defaults
-	this.url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/data/now';
+	this.protocol = window.location.protocol;
+	this.hostname = window.location.hostname;
+	this.port = window.location.port;
+	
 	this.delay_inc = 1;		// 1 seconds default
 	this.delay_max = 10;		// 10 seconds default
 	this.poll_freq = 20;		// 20 second default
@@ -71,8 +73,16 @@ function BroadcastClient(config) {
 
 
 	// merge in config object
-	$.extend(this, config);	
-
+	$.extend(this, config);
+	
+	//change url format to remove colon if port is not set
+	if(this.port === ''){
+		this.url = this.protocol + '//' + this.hostname +'/data/now';
+	}
+	else{
+		this.url = this.protocol + '//' + this.hostname + ':' + this.port + '/data/now';
+	}
+	
 	// Clean up logger
 	if (!this.logger) {
 		this.loger = { log: function() {} };
