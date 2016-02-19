@@ -275,7 +275,8 @@ BroadcastClient.prototype.WSConnect = function() {
 	// Standard WebSockets Implementation
 	if (!this.method || this.method == 'WebSocket') {
 		try {
-			this.ws = new WebSocket(this.url_ws);
+			this.ws = new WebSocket(this.url_ws + '.gz');
+			this.gzip = true;
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: WebSockets unavailable!');
@@ -287,7 +288,8 @@ BroadcastClient.prototype.WSConnect = function() {
 	// Mozilla WebSockets Implementation
 	if (!this.ws && (!this.method || this.method == 'MozWebSocket')) {
 		try {
-			this.ws = new MozWebSocket(this.url_ws);
+			this.ws = new MozWebSocket(this.url_ws + '.gz');
+			this.gzip = true;
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: MozWebSockets unavailable!');
@@ -337,7 +339,11 @@ BroadcastClient.prototype.WSConnect = function() {
 	// WebSocket Message
 	this.ws.onmessage = function(m) {
 		self.rx_data += m.data.length;
-		self.onMessage(m.data);
+		var message = m.data;
+		if (self.gzip) {
+			message = pako.inflate(m.data, { to: 'string' });
+		}
+		self.onMessage(message);
 	};
 
 	// WebSocket Closed
