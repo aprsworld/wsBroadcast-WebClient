@@ -59,7 +59,8 @@ function BroadcastClient(config) {
 	this.protocol = window.location.protocol;
 	this.hostname = window.location.hostname;
 	this.port = window.location.port;
-	
+	this.gzip = true;
+
 	this.delay_inc = 1;		// 1 seconds default
 	this.delay_max = 10;		// 10 seconds default
 	this.poll_freq = 20;		// 20 second default
@@ -76,7 +77,7 @@ function BroadcastClient(config) {
 	$.extend(this, config);
 	
 	//change url format to remove colon if port is not set
-	if(this.port === ''){
+	if(!this.port || this.port === ''){
 		this.url = this.protocol + '//' + this.hostname +'/data/now';
 	}
 	else{
@@ -129,6 +130,22 @@ function BroadcastClient(config) {
 	} else {
 		this.ie_hack = '.json';
 	}
+
+	// Make sure we have pako for gzip
+	if (this.gzip) {
+		var error=false;
+		try {
+			if (!pako || !pako.inflate) {
+				error=true;
+			}
+		} catch (e) {
+			error=true;
+		};
+		if (error) {
+			this.logger.error('wsb-client: Pako compression library not available! Disabling gzip compression.');
+			this.gzip=false;
+		}
+	}	
 
 	// Make a Connection
 	if (!this.Connect()) {
@@ -275,8 +292,11 @@ BroadcastClient.prototype.WSConnect = function() {
 	// Standard WebSockets Implementation
 	if (!this.method || this.method == 'WebSocket') {
 		try {
-			this.ws = new WebSocket(this.url_ws + '.gz');
-			this.gzip = true;
+			var url = this.url_ws;
+			if (this.gzip) {
+				url += '.gz';
+			}
+			this.ws = new WebSocket(url);
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: WebSockets unavailable!');
@@ -288,8 +308,11 @@ BroadcastClient.prototype.WSConnect = function() {
 	// Mozilla WebSockets Implementation
 	if (!this.ws && (!this.method || this.method == 'MozWebSocket')) {
 		try {
-			this.ws = new MozWebSocket(this.url_ws + '.gz');
-			this.gzip = true;
+			var url = this.url_ws;
+			if (this.gzip) {
+				url += '.gz';
+			}
+			this.ws = new MozWebSocket(url);
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: MozWebSockets unavailable!');
