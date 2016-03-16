@@ -158,6 +158,7 @@ BroadcastClient.prototype.onMessage = function(text) {
 	var data = null;
 	try {
 		data = JSON.parse(text);
+		console.log(data);
 	} catch (e) {
 		this.onError(['JSON Parse Error', e]);
 		return;
