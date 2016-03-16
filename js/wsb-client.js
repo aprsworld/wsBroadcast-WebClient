@@ -174,6 +174,7 @@ BroadcastClient.prototype.onMessage = function(text) {
 	// Parse JSON Message
 	var data = null;
 	try {
+		console.log(text);
 		data = JSON.parse(text);
 		console.log(data);
 	} catch (e) {
