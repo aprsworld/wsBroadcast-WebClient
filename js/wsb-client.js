@@ -420,13 +420,11 @@ BroadcastClient.prototype.Connect = function() {
 	// All methods failed or we requested to just fail here
 	if (!this.method || this.method == 'Fail') {
 		this.logger.error('wsb-client: All connection methods failed!');
-		this.connect = false; //Line that I added
 		return false;
 	}
 
 	// Some method we don't support was requested
 	this.logger.error('wsb-client: Connection method ' + this.method + ' does not exist!');
-	this.connect = false; //Line that I added
 	return false;
 };
 
