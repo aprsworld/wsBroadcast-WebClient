@@ -36,23 +36,6 @@
  *		'FlashWebSocket' forces use of the Flash emulation.
  *		'AJAX' forces the use of AJAX polling.
  *		'Fail' forces the use of none (failure).
- *
- * methods
- *	enumerate(uri)
- *		Will enumerate all properties of the specified uri in the tree.
- *
- *
- *      XXX: THIS IS BOGUS: TODO:
- *	sub subscribe(uri, callback)
- *		Will subscribe to and call callback with any updates from that
- *		uri in the tree.
- *		callback(data) where data is a JSON object containing any
- *		changes to the tree at that uri.
- *		sub is an object with a remove() method that will stop the
- *		subscription.
- *
- *	data_rx_counter()
- *		Will return the number of bytes recieved from the server.
  */
 function BroadcastClient(config) {
 	// Set Defaults
