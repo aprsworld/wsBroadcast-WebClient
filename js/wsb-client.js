@@ -140,6 +140,32 @@ function BroadcastClient(config) {
 	return this;
 }
 
+/*
+ * Set Subscription Filters
+ * 
+ * filters_set([URI, ...]);
+ */
+BroadcastClient.prototype.filters_set = function(filters) {
+	this.logger.log("wsb-client: Set filters.");
+	this.filters = filters;
+	if (!this.ws) {
+		this.logger.warn("wsb-client: Can't set filters as we're not connected!");
+		return;
+	}
+	this.filters_send();
+};
+BroadcastClient.prototype.filters_send = function() {
+	if (!this.ws) {
+		this.logger.error("wsb-client: Attempting to set filters when not connected!");
+		return;
+	}
+	if (this.ws.readyState != 1) {
+		return;
+	}
+	var message = { wsb: { filters: this.filters } };
+	this.ws.send(JSON.stringify(message));
+	this.logger.log("wsb-client:  Sent filters.");
+};
 
 /*
  * Get Data Counter
@@ -340,6 +366,9 @@ BroadcastClient.prototype.WSConnect = function() {
 		self.logger.log('wsb-client: WebSocket Connected.');
 		self.ConnectThrottle(true);
 		self.ws_error = false;
+
+		// Send filters
+		self.filters_send();
 	};
 
 	// WebSocket Message
