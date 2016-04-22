@@ -368,7 +368,7 @@ BroadcastClient.prototype.WSConnect = function() {
 		self.ws_error = false;
 
 		// Send filters
-		if (self.filters !=== undefined) {
+		if (self.filters !== undefined) {
 			self.filters_send();
 		}
 	};
