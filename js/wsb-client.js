@@ -476,10 +476,25 @@ BroadcastClient.prototype.Response = function(XHR, status, data, error) {
 };
 
 /*
+ * Enumerate Object
+ */
+BroadcastClient.prototype.Enumerate = function(callback, uri) {
+	$.ajax(this.url + this.ie_hack + '/' + uri, {
+		context:	this,
+		cache:		false,
+		dataType:	'json'
+	}).done(function (data, status, XHR) {
+		callback(this.Response(XHR, status, data, undefined));
+	}).fail(function (XHR, status, error) {
+		callback(this.Response(XHR, status, undefined, error));
+	});
+};
+
+/*
  * Get Value
  */
 BroadcastClient.prototype.ValueGet = function(callback, uri) {
-	$.ajax(this.url + this.ie_hack + '/' + uri, {
+	$.ajax(this.url + this.ie_hack + '/' + uri + '?enumerate=true', {
 		context:	this,
 		cache:		false,
 		dataType:	'json'
