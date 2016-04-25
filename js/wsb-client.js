@@ -479,7 +479,7 @@ BroadcastClient.prototype.Response = function(XHR, status, data, error) {
  * Enumerate Object
  */
 BroadcastClient.prototype.Enumerate = function(callback, uri) {
-	$.ajax(this.url + this.ie_hack + '/' + uri, {
+	$.ajax(this.url + this.ie_hack + '/' + uri + '?enumerate=true', {
 		context:	this,
 		cache:		false,
 		dataType:	'json'
@@ -494,7 +494,7 @@ BroadcastClient.prototype.Enumerate = function(callback, uri) {
  * Get Value
  */
 BroadcastClient.prototype.ValueGet = function(callback, uri) {
-	$.ajax(this.url + this.ie_hack + '/' + uri + '?enumerate=true', {
+	$.ajax(this.url + this.ie_hack + '/' + uri, {
 		context:	this,
 		cache:		false,
 		dataType:	'json'
