@@ -59,10 +59,9 @@ function BroadcastClient(config) {
 	$.extend(this, config);
 	
 	//change url format to remove colon if port is not set
-	if(!this.port || this.port === ''){
+	if(!this.url && (!this.port || this.port === '')){
 		this.url = this.protocol + '//' + this.hostname +'/data/now';
-	}
-	else{
+	} else if (!this.url) {
 		this.url = this.protocol + '//' + this.hostname + ':' + this.port + '/data/now';
 	}
 	
