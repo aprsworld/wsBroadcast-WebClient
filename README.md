@@ -1,10 +1,10 @@
 # wsBroadcast-WebClient
 
-Web-Browser JavaScript library for connecting to the wsBroadcast System with a Flash based WebSockets fall-back.  Please see the comments in 'ws/wsb-client.js' for API and usage information.
+Web-Browser JavaScript library for connecting to the wsBroadcast System with websockets and an AJAX fall-back.  Please see the comments in 'ws/wsb-client.js' for API and usage information.
 
 ## js/wsb-client.js
 
-The client library for Web-Browsers.  Is supports native WebSockets, 'Flash' emulation of WebSockets *(currently defunct)*, and falling back to "AJAX"-based polling.  It currently requires 'JQuery' (http://www.jquery.com/) and the Flash Emualtion of WebSockets library 'web-socket-js' (http://github.com/gimite/web-socket-js/).  Release copies of both of these libraries are contained in this repositor in the 'res' directory.  It should be ECMA3 compliant and work on all modern browsers.  Every attempt has been made to make it as compatible as humanly possible.
+The client library for Web-Browsers.  Is supports native WebSockets and will fall back to "AJAX"-based polling.  It currently requires 'JQuery' (http://www.jquery.com/).  Release copies of the libraries are contained in this repositor in the 'res' directory.  It should be ECMA3 compliant and work on all modern browsers.  Every attempt has been made to make it as compatible as humanly possible.
 
 ### test.html
 
@@ -20,10 +20,6 @@ Contains external third-party resources required for this library to function.
 
 `<script src="/wsBroadcast-WebClient/res/jquery-2.1.4.min.js"></script>
 <script src="/wsBroadcast-WebClient/res/pako.min.js"></script>
-<script src="/wsBroadcast-WebClient/res/swfobject-2.2.min.js"></script> <!-- SWFObject [Flash fallback for web_socket_js] -->
-<script src="/wsBroadcast-WebClient/res/web-socket-js/web_socket.js"></script> <!-- git.com/gimite/web-socket-js WebSockets Compatibility Fall-Back library -->
-<!-- Global Settings for web-socket-js library -->
-<script>WEB_SOCKET_SWF_LOCATION = "/wsBroadcast-WebClient/res/web-socket-js/WebSocketMain.swf";</script>
 <script src="/wsBroadcast-WebClient/js/wsb-client.js"></script> <!-- WebSockets Broadcast Client -->`
 
 ## BroadcastClient Object
@@ -74,7 +70,7 @@ If the logger object is not present, the standard consol object from the browser
 
 ### method
 
-This configuration option allows you to force an underlying method to be used for testing purposes.  It really should never be used in production code.  The options are 'WebSocket', 'MozWebSocket', 'FlashWebSocket', 'AJAX', and 'Fail'.
+This configuration option allows you to force an underlying method to be used for testing purposes.  It really should never be used in production code.  The options are 'WebSocket', 'MozWebSocket', 'AJAX', and 'Fail'.
 
 ---
 Copyright (C) APRS World, LLC. 2015  

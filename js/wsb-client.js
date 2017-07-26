@@ -33,7 +33,6 @@
  *	method allows you to force an underlying method for testing reasons.
  *		'WebSocket' forces use of standard native WebSockets.
  *		'MozWebSocket' forces use of the Mozilla WebSockets.
- *		'FlashWebSocket' forces use of the Flash emulation.
  *		'AJAX' forces the use of AJAX polling.
  *		'Fail' forces the use of none (failure).
  */
@@ -325,19 +324,6 @@ BroadcastClient.prototype.WSConnect = function() {
 		} finally {
 			if (!this.ws && this.method) {
 				this.logger.error('wsb-client: MozWebSockets unavailable!');
-				return false;
-			}
-		}
-	}
-
-	// Flash WebSockets Emulation
-	if (!this.ws && (!this.method || this.method == 'FlashWebSocket')) {
-		try {
-			this.logger.info('wsb-client: FlashWebSocket is broken!');
-			//this.ws = new FlashWebSocket(this.url_ws);
-		} finally {
-			if (!this.ws && this.method) {
-				this.logger.error('wsb-client: FlashWebSocket unavailable!');
 				return false;
 			}
 		}
