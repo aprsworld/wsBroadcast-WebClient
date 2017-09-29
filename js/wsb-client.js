@@ -11,7 +11,7 @@ function BroadcastClient(config) {
 BroadcastClient.prototype.config_reset = function() {
 	this.index = 0;
 	this.delay = this.poll_freq;
-}
+};
 
 
 /*
@@ -56,7 +56,7 @@ BroadcastClient.prototype.AJAXConnect = function (config) {
 		setTimeout($.proxy(this.Connect, this), this.delay * 1000);
 	}).fail(function (jqXHR, status, error) {
 		// XXX: jqXHR?
-		this.logger.error('AJAX Error - ' + error;
+		this.logger.error('AJAX Error - ' + error);
 		setTimeout($.proxy(this.Connect, this), this.delay * 1000);
 	});
 
@@ -109,7 +109,7 @@ BroadcastClient.prototype.WSConnect = function(config) {
 		self.ws_error = false;
 
 		// Send filters
-		if (config.filters !=== undefined) {
+		if (config.filters !== undefined) {
 			self.filters_send(config.filters);
 		}
 	};
